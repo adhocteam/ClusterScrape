@@ -1,18 +1,9 @@
 # ClusterScrape
 
-To start your Phoenix app:
+Ad Hoc Sabbatical Project - Mike Auclair
 
-  * Install dependencies with `mix deps.get`
-  * Start Phoenix endpoint with `mix phoenix.server`
+Intro:
+Elixir, the programming language based on Erlang’s BEAM VM has exploded in popularity. It combines comprehensible Ruby-like syntax with the clustering abilities and fault tolerance of the BEAM VM. One of the major value propositions of BEAM is its baked-in clustering abilities. A process started on one machine can easily be sharded across multiple machines, with little work by the programmer, and inherent fault-tolerance and sane retry semantics. How does BEAM service discovery interplay with AWS Autoscaling? Could this deliver tangible value to our processes given the ephemeral nature of our instances?
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+Proposal:
+Build a thin Elixir webapp that receives a set of URLs from the client and scrapes them on multiple machines. Use packer + ansible to build an AMI with the app baked on intended to be delivered into an autoscale group.
