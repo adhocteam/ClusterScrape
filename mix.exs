@@ -9,7 +9,9 @@ defmodule ClusterScrape.Mixfile do
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     dialyzer: [plt_add_deps: :transitive, plt_add_apps: [:mix], flags: [:unmatched_returns, :error_handling, :race_conditions, :underspecs]]
+    ]
   end
 
   # Configuration for the OTP application.
@@ -35,6 +37,8 @@ defmodule ClusterScrape.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:floki, "~> 0.17.0"},
-     {:httpoison, "~> 0.12"}]
+     {:httpoison, "~> 0.12"},
+     {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+     {:distillery, "~> 1.4", runtime: false}]
   end
 end
