@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  connection: local
+  remote_user: root
+  vars:
+    erlang_version: 20.0
+    elixir_version: 1.5.0
+  tasks:
+  - name: Extract erlang
+    unarchive:
+      src: "/otp_src_{{erlang_version}}.tar.gz"
+      dest: "/"
+
+  - name: configure/make/make install erlang
+    command: chdir=/otp_src_{{erlang_version}} {{item}}
+    with_items:
+      - ./configure
+      - make
+      - make install
+  - name: Extract elixir
+    unarchive:
+      src: "/elixir-{{elixir_version}}.tar.gz"
+      dest: "/"
+
+  - name: make/make install elixir
+    command: chdir=/elixir-{{elixir_version}} {{item}}
+    with_items:
+      - make
+      - make install
+
+  - name: Install elixir deps
+    shell: mix local.hex && mix local.rebar

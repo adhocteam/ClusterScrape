@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  connection: local
+  remote_user: root
+  vars:
+    erlang_version: 20.0
+    elixir_version: 1.5.0
+  tasks:
+  - name: Build release
+    shell: chdir=/app MIX_ENV=prod mix release --env=prod
