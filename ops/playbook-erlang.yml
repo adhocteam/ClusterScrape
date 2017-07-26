@@ -2,6 +2,8 @@
 - hosts: localhost
   connection: local
   remote_user: root
+  environment:
+    LANG: "en_US.UTF-8"
   vars:
     erlang_version: 20.0
     elixir_version: 1.5.0

@@ -14,7 +14,6 @@ use Mix.Config
 config :cluster_scrape, ClusterScrape.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/manifest.json",
   server: true,
   root: ".",
   version: Application.spec(:cluster_scrape, :vsn)

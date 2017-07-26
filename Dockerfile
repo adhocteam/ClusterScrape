@@ -2,9 +2,7 @@ FROM amazonlinux:2017.03
 
 RUN yum -y update
 
-RUN yum install -y -v python27-pip sudo findutils gcc python27-devel "@Development tools"
-
-RUN yum install -y -v libffi-devel openssl-devel
+RUN yum install -y -v python27-pip sudo findutils gcc python27-devel openssl-devel libffi-devel "@Development tools"
 
 RUN pip install ansible
 
