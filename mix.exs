@@ -19,7 +19,7 @@ defmodule ClusterScrape.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {ClusterScrape, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :hackney, :httpoison, :floki]]
+     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :hackney, :httpoison, :floki, :peerage]]
   end
 
   # Specifies which paths to compile per environment.
@@ -38,7 +38,10 @@ defmodule ClusterScrape.Mixfile do
      {:cowboy, "~> 1.0"},
      {:floki, "~> 0.17.0"},
      {:httpoison, "~> 0.12"},
+     {:poison, "~> 1.5.0", override: true},
      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
-     {:distillery, "~> 1.4", runtime: false}]
+     {:distillery, "~> 1.4", runtime: false},
+     {:peerage, "~> 1.0.2"},
+     {:ex_aws, "~> 1.0"}]
   end
 end
