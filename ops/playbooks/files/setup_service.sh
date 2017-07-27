@@ -5,6 +5,9 @@ mkdir -p "/etc/sv/$APP_NAME"
 # Logging configuration
 mkdir -p "/etc/sv/$APP_NAME/log"
 mkdir -p "/var/log/$APP_NAME"
+mkdir -p "/etc/sv/$APP_NAME/env"
+
+echo "4000" > /etc/sv/$APP_NAME/env/PORT
 
 # Create the logging run script
 cat << EOF > /etc/sv/$APP_NAME/log/run
