@@ -8,27 +8,41 @@ defmodule ClusterScrape.PageController do
   end
 
   def scrape(conn, _params) do
-    target = "http://um-hi.com/jack/index.php"
-    output = case fetch(target) do
-               {:ok, sha} -> sha
-               {:error, msg} ->
-                 _ = Logger.debug "Error scraping URL #{target}: #{msg}"
-                 msg
-             end
-    render conn, "scrape.html", sha: output
+    targets = ["http://um-hi.com/jack/index.php"]
+    output = fetch_batch(targets)
+    render conn, "scrape.html", shas: output
   end
 
+  def fetch_batch(targets) do
+    input = Enum.map(targets, fn(target) ->
+      {ClusterScrape.PageController, :fetch, [target]}
+    end)
+    Enum.map(:rpc.parallel_eval(input), fn(req) ->
+      case req do
+        {:ok, target, sha} -> {target, sha}
+        {:error, target, msg} ->
+          _ = Logger.debug "Error scraping URL: #{msg}"
+          {target, msg}
+      end
+    end)
+  end
+  
   @spec fetch(String.t) :: {:ok|:error, String.t}
   def fetch(target) do
     case HTTPoison.get(target, [], [ ssl: [{:versions, [:'tlsv1.2']}] ]) do
+      # I'm doing something with a pattern match here
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, :crypto.hash(:sha256, body) |> Base.encode16}
+        {:ok, target, :crypto.hash(:sha256, body) |> Base.encode16}
+      [ok: %HTTPoison.Response{status_code: 200, body: body}] ->
+        {:ok, target, :crypto.hash(:sha256, body) |> Base.encode16}
       {:ok, %HTTPoison.Response{status_code: 404}} ->
-        {:error, "URL Not Found"}
+        {:error, target, "URL Not Found"}
+      [ok: %HTTPoison.Response{status_code: 404}] ->
+        {:error, target, "URL Not Found"}
       {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
+        {:error, target, reason}
       _ ->
-        {:error, "Other failure"}
+        {:error, target, "Other failure"}
     end
   end
 end

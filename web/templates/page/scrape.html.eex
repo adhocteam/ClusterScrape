@@ -1,4 +1,9 @@
 <div class="jumbotron">
-  <h2>Yer SHA256 is</h2>
-  <p class="lead"><%= @sha %></p>
+  <h2>Yer SHA256s are</h2>
+  <table>
+    <tr><th>URL</th><th>SHA/message</th></tr>
+    <%= for {url, msg} <- @shas do %>
+      <tr><td><%= url %></td><td><%= msg %></td></tr>
+    <% end %>
+  </table>
 </div>
