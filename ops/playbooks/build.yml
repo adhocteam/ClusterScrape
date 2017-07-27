@@ -1,0 +1,61 @@
+---
+- hosts: localhost
+  connection: local
+  remote_user: root
+  environment:
+    LANG: "en_US.UTF-8"
+  vars:
+    erlang_version: 20.0
+    elixir_version: 1.5.0
+  tasks:
+  - name: Get release hash
+    shell: git rev-parse --short HEAD
+    register: relhash
+  - name: Set release hash
+    set_fact:
+      release_hash: "{{relhash.stdout}}"
+      timestamp: "{{ lookup('pipe', 'date +%Y%m%d%H%M%SZ') }}"
+  - name: Build app deps
+    shell: chdir=/app MIX_ENV=prod mix do local.hex --force, deps.get, deps.compile
+  - name: Build app release
+    shell: chdir=/app MIX_ENV=prod mix release --env=prod
+  - name: Package release
+    shell: fpm -t rpm -s dir -n cluster_scrape -v {{release_hash}} \
+      --prefix /opt/ \ -C /app/_build/prod/rel
+      --rpm-use-file-permissions --rpm-user root --rpm-group root \
+      cluster_scrape
+  - name: Publish release
+    shell: mv /app/ops/playbooks/cluster_scrape*.rpm /app/ops/playbooks/files
+  - name: Build AMI
+    shell: chdir=/app/ops RELEASE_HASH={{release_hash}} /usr/bin/packer build packer.json
+    register: ami_lines
+  - name: Set AMI name
+    set_fact:
+      ami_name: "{{ami_lines.stdout_lines[-1] | regex_replace('^us-east-1: ', '')}}"
+  - name: Set Up LC
+    ec2_lc:
+      region: us-east-1
+      name: "cluster_scrape-{{release_hash}}-{{timestamp}}"
+      image_id: "{{ ami_name }}"
+      key_name: "cluster_scrape"
+      instance_type: "t2.micro"
+      security_groups: ["***REMOVED***", "***REMOVED***"]
+      instance_monitoring: yes
+      assign_public_ip: yes
+      instance_profile_name: '***REMOVED***'
+
+  - name: Set Up ASG
+    ec2_asg:
+      name: clusterscrape
+      launch_config_name: "cluster_scrape-{{release_hash}}-{{timestamp}}"
+      health_check_period: 300
+      health_check_type: ELB
+      replace_all_instances: yes
+      min_size: 3
+      max_size: 3
+      desired_capacity: 3
+      region: us-east-1
+      tags:
+        - csrelease: "{{release_hash}}"
+        - app: "cluster-scrape"
+      vpc_zone_identifier: ["***REMOVED***"]

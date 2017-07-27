@@ -1,0 +1,26 @@
+---
+- hosts: all
+  user: ec2-user
+  become: True
+  tasks:
+    - name: copy runit rpm to target
+      copy:
+        src: files/runit-2.1.2-1.amzn1.x86_64.rpm
+        dest: /tmp/runit.rpm
+
+    - name: copy cs rpm to target
+      copy:
+        src: "{{ item }}"
+        dest: /tmp/cluster_scrape.rpm
+      with_fileglob:
+        - "files/cluster_scrape*.rpm"
+
+    - name: install packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - /tmp/cluster_scrape.rpm
+        - /tmp/runit.rpm
+    - name: setup service
+      shell: sh files/setup_service.sh
