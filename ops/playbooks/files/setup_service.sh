@@ -7,7 +7,6 @@ mkdir -p "/etc/sv/$APP_NAME/log"
 mkdir -p "/var/log/$APP_NAME"
 mkdir -p "/etc/sv/$APP_NAME/env"
 
-
 export COOKIE=cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
 
 echo $COOKIE > /etc/sv/$APP_NAME/env/COOKIE
