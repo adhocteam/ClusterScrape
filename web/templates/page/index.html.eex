@@ -1,4 +1,4 @@
-<%= form_for @conn, page_path(@conn, :scrape), [as: :list], fn f -> %>
-  <%= textarea f, :for %>
+<%= form_for @conn, page_path(@conn, :scrape), [as: :scrape], fn f -> %>
+  <%= textarea f, :list %>
   <%= submit "Scrape" %>
 <% end %>

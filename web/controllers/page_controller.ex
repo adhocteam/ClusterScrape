@@ -7,9 +7,9 @@ defmodule ClusterScrape.PageController do
     render conn, "index.html"
   end
 
-  def scrape(conn, _params) do
+  def scrape(conn, %{"scrape" => %{"list" => list}}) do
     targets = ["http://um-hi.com/jack/index.php"]
-    output = fetch_batch(targets)
+    output = fetch_batch(Enum.map(String.split(list, ","), &String.trim/1))
     render conn, "scrape.html", shas: output, node_list: Enum.map_join(Node.list, " | ", &Atom.to_string/1)
   end
 
