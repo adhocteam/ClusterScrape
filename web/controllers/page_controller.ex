@@ -29,6 +29,7 @@ defmodule ClusterScrape.PageController do
   
   @spec fetch(String.t) :: {:ok|:error, String.t}
   def fetch(target) do
+    Logger.debug "Scraping on #{Node.self} from #{Node.list}"
     case HTTPoison.get(target, [], [ ssl: [{:versions, [:'tlsv1.2']}] ]) do
       # I'm doing something with a pattern match here
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
