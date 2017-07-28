@@ -53,6 +53,7 @@
       health_check_period: 300
       health_check_type: ELB
       replace_all_instances: yes
+      load_balancers: ["cluster-scrape-test"]
       min_size: 3
       max_size: 3
       desired_capacity: 3
