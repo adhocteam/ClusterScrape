@@ -23,4 +23,4 @@
         - /tmp/cluster_scrape.rpm
         - /tmp/runit.rpm
     - name: setup service
-      shell: sh files/setup_service.sh
+      shell: RELEASE_HASH="{{ ReleaseHash }}" sh files/setup_service.sh

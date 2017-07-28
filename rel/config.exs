@@ -40,6 +40,7 @@ end
 
 release :cluster_scrape do
   set version: current_version(:cluster_scrape)
+  set vm_args: "rel/vm.args"
   set applications: [
     :runtime_tools
   ]

@@ -35,10 +35,11 @@
             ]
         },
         {
-            "type": "ansible-local",
-            "playbook_file": "playbooks/cs-app.yml",
+          "type": "ansible-local",
+          "playbook_file": "playbooks/cs-app.yml",
           "playbook_dir": "playbooks",
-          "command": "ansible-playbook -vvv"
+          "command": "ansible-playbook -vvv",
+          "extra_arguments": [ "--extra-vars \"ReleaseHash={{user `release_hash`}}\"" ]
         }
     ]
 }
