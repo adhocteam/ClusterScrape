@@ -1,6 +1,6 @@
 <div class="jumbotron">
   <h2>Yer SHA256s are</h2>
-  <h3><%= Node.list %></h3>
+  <h3>(May have run on <%= @node_list %>)</h3>
   <table>
     <tr><th>URL</th><th>SHA/message</th></tr>
     <%= for {url, msg} <- @shas do %>

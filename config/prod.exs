@@ -19,7 +19,7 @@ config :cluster_scrape, ClusterScrape.Endpoint,
   version: Application.spec(:cluster_scrape, :vsn)
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, level: :debug
 config :peerage, via: ClusterScrape.QueryNodes
 # ## SSL Support
 #

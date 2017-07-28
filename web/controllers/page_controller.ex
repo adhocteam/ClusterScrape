@@ -10,7 +10,7 @@ defmodule ClusterScrape.PageController do
   def scrape(conn, _params) do
     targets = ["http://um-hi.com/jack/index.php"]
     output = fetch_batch(targets)
-    render conn, "scrape.html", shas: output
+    render conn, "scrape.html", shas: output, node_list: Enum.map_join(Node.list, " | ", &Atom.to_string/1)
   end
 
   def fetch_batch(targets) do
@@ -29,7 +29,7 @@ defmodule ClusterScrape.PageController do
   
   @spec fetch(String.t) :: {:ok|:error, String.t}
   def fetch(target) do
-    Logger.debug "Scraping on #{Node.self} from #{Node.list}"
+    Logger.debug "Scraping on #{Atom.to_string(Node.self)} from #{Enum.map_join(Node.list, " | ", &Atom.to_string/1)}"
     case HTTPoison.get(target, [], [ ssl: [{:versions, [:'tlsv1.2']}] ]) do
       # I'm doing something with a pattern match here
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
