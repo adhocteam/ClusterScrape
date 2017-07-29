@@ -1,0 +1,9 @@
+---
+sg_list:
+  - "security-group-to-apply-to-instance-1"
+  - "security-group-to-apply-to-instance-1"
+region: us-east-1
+load_balancers:
+  - load-balancer-name
+vpc_subnets:
+  - subnet-id-to-launch-instances-in

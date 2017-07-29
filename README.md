@@ -1,9 +1,24 @@
 # ClusterScrape
 
-## Ad Hoc Sabbatical Project - Mike Auclair
+## Example app demonstrating Elixir clustering with AWS autoscaling
 
 ### Intro
-Elixir, the programming language based on Erlang’s BEAM VM has exploded in popularity. It combines comprehensible Ruby-like syntax with the clustering abilities and fault tolerance of the BEAM VM. One of the major value propositions of BEAM is its baked-in clustering abilities. A process started on one machine can easily be sharded across multiple machines, with little work by the programmer, and inherent fault-tolerance and sane retry semantics. How does BEAM service discovery interplay with AWS Autoscaling? Could this deliver tangible value to our processes given the ephemeral nature of our instances?
+This simple Phoenix app takes a list of urls to scrape, then returns the sha256 of the response for each. It does this by dispatching RPC calls to other instances running the same release using Erlang's `:rpc.parallel_eval/1`. As currently configured
 
-### Proposal
-Build a thin Elixir webapp that receives a set of URLs from the client and scrapes them on multiple machines. Use packer + ansible to build an AMI with the app baked on intended to be delivered into an autoscale group.
+### Installation
+* Install Erlang and Elixir
+* `mix do deps.get,deps.compile`
+
+### Running
+
+```
+mix phoenix.server
+```
+
+### Deploying to AWS
+Copy ops/vars.yml.example to vars.yml and populate with the appropriate values for your environment. Then run:
+```
+docker build  -t clusterscrape .
+docker run -e "AWS_ACCESS_KEY_ID=<ACCESS KEY>" -e "AWS_SECRET_ACCESS_KEY=<SECRET>" clusterscrape:latest
+```
+The app will run on port 4000 so make sure your load balancer is set up to route traffic appropriately. Ansible's `ec2_asg` has issues provisioning ASGs that work with ALBs, so classic ELBs are recommended for laod balancing.
