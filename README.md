@@ -24,6 +24,7 @@ docker run -e "AWS_ACCESS_KEY_ID=<ACCESS KEY>" -e "AWS_SECRET_ACCESS_KEY=<SECRET
 The app will run on port 4000 so make sure your load balancer is set up to route traffic appropriately. Ansible's `ec2_asg` has issues provisioning ASGs that work with ALBs, so classic ELBs are recommended for load balancing. You will also need a security group that will allow traffic on ports 4369 and 9100-9110 _between_ app instances
 
 #### Deploy process overview
+* Erlang+OTP 20.0 and Elixir 1.5 will be installed in the Amazon Linux docker container
 * A release will be built using [Distillery](https://github.com/bitwalker/distillery)
 * An RPM for the app will be built using [fpm](https://github.com/jordansissel/fpm)
 * An AMI for the release will be created using [Packer](https://github.com/hashicorp/packer)
