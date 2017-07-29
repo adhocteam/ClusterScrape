@@ -3,7 +3,7 @@
 ## Example app demonstrating Elixir clustering with AWS autoscaling
 
 ### Intro
-This simple Phoenix app takes a list of urls to scrape, then returns the sha256 of the response for each. It does this by dispatching RPC calls to other instances running the same release using Erlang's `:rpc.parallel_eval/1`. As currently configured, the app will poll the AWS API every 10 seconds to get the list of peer nodes. Node management is handled by a custom provider for [Peerage](https://github.com/mrluc/peerage)
+This simple Phoenix app takes a list of urls to scrape, then returns the sha256 of the response for each. It does this by dispatching RPC calls to other instances running the same release using Erlang's `:rpc.parallel_eval/1`. As currently configured, the app will poll the AWS API every 10 seconds to get the list of peer nodes. Node management is handled by a [custom provider](https://github.com/adhocteam/ClusterScrape/blob/master/lib/cluster_scrape/query_nodes.ex) for [Peerage](https://github.com/mrluc/peerage)
 
 ### Installation
 * Install Erlang and Elixir
