@@ -52,7 +52,7 @@
 
   - name: Set Up ASG
     ec2_asg:
-      name: clusterscrape
+      name: "{{config_vars.asg_name}}"
       launch_config_name: "cluster_scrape-{{release_hash}}-{{timestamp}}"
       health_check_period: 300
       health_check_type: ELB

@@ -7,3 +7,4 @@ load_balancers:
   - load-balancer-name
 vpc_subnets:
   - subnet-id-to-launch-instances-in
+asg_name: name-for-asg
