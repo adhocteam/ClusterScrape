@@ -8,3 +8,5 @@ load_balancers:
 vpc_subnets:
   - subnet-id-to-launch-instances-in
 asg_name: name-for-asg
+instance_iam_profile: profile-arn
+instance_ssh_key: key-name

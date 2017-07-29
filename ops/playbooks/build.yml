@@ -43,12 +43,12 @@
       region: us-east-1
       name: "cluster_scrape-{{release_hash}}-{{timestamp}}"
       image_id: "{{ ami_name }}"
-      key_name: "cluster_scrape"
+      key_name: "{{config_vars.instance_ssh_key}}"
       instance_type: "t2.micro"
       security_groups: "{{config_vars.sg_list}}"
       instance_monitoring: yes
       assign_public_ip: yes
-      instance_profile_name: '***REMOVED***'
+      instance_profile_name: "{{config_vars.instance_iam_profile}}"
 
   - name: Set Up ASG
     ec2_asg:
