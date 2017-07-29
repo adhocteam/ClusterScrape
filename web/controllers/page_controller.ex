@@ -3,14 +3,14 @@ defmodule ClusterScrape.PageController do
   use ClusterScrape.Web, :controller
 
   def index(conn, _params) do
-    
     render conn, "index.html"
   end
 
   def scrape(conn, %{"scrape" => %{"list" => list}}) do
-    targets = ["http://um-hi.com/jack/index.php"]
-    output = fetch_batch(Enum.map(String.split(list, ","), &String.trim/1))
-    render conn, "scrape.html", shas: output, node_list: Enum.map_join(Node.list, " | ", &Atom.to_string/1)
+    split_list = Enum.map(String.split(list, ","), &String.trim/1)
+    output = fetch_batch(split_list)
+    nl = Enum.map_join(Node.list, " | ", &Atom.to_string/1)
+    render conn, "scrape.html", shas: output, node_list: nl
   end
 
   def fetch_batch(targets) do
@@ -30,8 +30,9 @@ defmodule ClusterScrape.PageController do
   @spec fetch(String.t) :: {:ok|:error, String.t}
   def fetch(target) do
     Logger.debug "Scraping on #{Atom.to_string(Node.self)} from #{Enum.map_join(Node.list, " | ", &Atom.to_string/1)}"
-    case HTTPoison.get(target, [], [ ssl: [{:versions, [:'tlsv1.2']}] ]) do
-      # I'm doing something with a pattern match here
+    options = [ ssl: [{:versions, [:'tlsv1.2']}], follow_redirect: true]
+    case HTTPoison.get(target, [], options) do
+      # I'm doing something dumb with a pattern match here
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, target, :crypto.hash(:sha256, body) |> Base.encode16}
       [ok: %HTTPoison.Response{status_code: 200, body: body}] ->
